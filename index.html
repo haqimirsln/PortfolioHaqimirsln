@@ -55,7 +55,7 @@
         "https://twitter.com/urgroovyy"
       ],
       "alumniOf": "Universiti Malaysia Terengganu",
-      "knowsAbout": ["Web Development", "Software Engineering", "Marine Conservation Technology"]
+      "knowsAbout": ["PHP", "Laravel", "CodeIgniter 4", "MySQL", "Tailwind CSS", "Web Development", "Software Engineering", "Progressive Web Apps", "Marine Conservation Technology"]
     }
   </script>
 
@@ -73,9 +73,21 @@
       --color-success: #30d158;
       --color-error: #ff453a;
 
+      /* Aurora / ocean mesh gradient stops */
+      --aurora-1: #0a3d62;
+      /* deep sea */
+      --aurora-2: #0071e3;
+      /* accent blue */
+      --aurora-3: #00c2c7;
+      /* bioluminescent cyan */
+      --aurora-4: #052a4a;
+      /* abyss */
+      --aurora-5: #1b7a6e;
+      /* seagrass teal */
+
       /* Glassmorphism */
-      --glass-bg: rgba(29, 29, 31, 0.72);
-      --glass-border: rgba(255, 255, 255, 0.08);
+      --glass-bg: rgba(20, 22, 26, 0.78);
+      --glass-border: rgba(255, 255, 255, 0.1);
       --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 
       /* Spacing */
@@ -147,6 +159,116 @@
     ::selection {
       background: var(--color-accent);
       color: white;
+    }
+
+    /* ===== AURORA MESH BACKGROUND ===== */
+    .aurora {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      overflow: hidden;
+      pointer-events: none;
+      background: var(--color-bg);
+    }
+
+    .aurora__blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.55;
+      will-change: transform;
+      mix-blend-mode: screen;
+    }
+
+    .aurora__blob--1 {
+      width: 55vw;
+      height: 55vw;
+      top: -12vw;
+      left: -8vw;
+      background: radial-gradient(circle at 30% 30%, var(--aurora-2), transparent 65%);
+      animation: drift1 34s ease-in-out infinite alternate;
+    }
+
+    .aurora__blob--2 {
+      width: 48vw;
+      height: 48vw;
+      top: 10vh;
+      right: -12vw;
+      background: radial-gradient(circle at 50% 50%, var(--aurora-3), transparent 62%);
+      animation: drift2 42s ease-in-out infinite alternate;
+      opacity: 0.4;
+    }
+
+    .aurora__blob--3 {
+      width: 60vw;
+      height: 60vw;
+      bottom: -20vw;
+      left: 20vw;
+      background: radial-gradient(circle at 40% 60%, var(--aurora-5), transparent 60%);
+      animation: drift3 50s ease-in-out infinite alternate;
+      opacity: 0.35;
+    }
+
+    .aurora__blob--4 {
+      width: 40vw;
+      height: 40vw;
+      top: 45vh;
+      left: -10vw;
+      background: radial-gradient(circle at 50% 50%, var(--aurora-1), transparent 60%);
+      animation: drift1 46s ease-in-out infinite alternate-reverse;
+      opacity: 0.5;
+    }
+
+    @keyframes drift1 {
+      0% {
+        transform: translate3d(0, 0, 0) scale(1);
+      }
+
+      100% {
+        transform: translate3d(8vw, 6vh, 0) scale(1.15);
+      }
+    }
+
+    @keyframes drift2 {
+      0% {
+        transform: translate3d(0, 0, 0) scale(1.1);
+      }
+
+      100% {
+        transform: translate3d(-10vw, 8vh, 0) scale(0.95);
+      }
+    }
+
+    @keyframes drift3 {
+      0% {
+        transform: translate3d(0, 0, 0) scale(1);
+      }
+
+      100% {
+        transform: translate3d(-6vw, -10vh, 0) scale(1.2);
+      }
+    }
+
+    /* Film grain overlay */
+    .grain {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0.05;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+      mix-blend-mode: overlay;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      .aurora__blob--1,
+      .aurora__blob--2,
+      .aurora__blob--3,
+      .aurora__blob--4 {
+        animation: none;
+      }
     }
 
     /* ===== TYPOGRAPHY ===== */
@@ -345,15 +467,7 @@
     }
 
     .hero-gradient {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 1000px;
-      height: 1000px;
-      background: radial-gradient(circle, rgba(0, 113, 227, 0.15) 0%, transparent 70%);
-      filter: blur(80px);
-      pointer-events: none;
+      display: none;
     }
 
     .hero-content {
@@ -374,12 +488,25 @@
 
     .hero h1 {
       margin-bottom: var(--spacing-md);
-      background: linear-gradient(135deg, var(--color-text-primary) 0%, rgba(245, 245, 247, 0.6) 100%);
+      background: linear-gradient(120deg, var(--color-text-primary) 0%, var(--aurora-3) 35%, var(--color-accent) 55%, var(--color-text-primary) 100%);
+      background-size: 220% auto;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
       opacity: 0;
-      animation: fadeInUp 0.8s ease 0.4s forwards;
+      animation: fadeInUp 0.8s ease 0.4s forwards, sheen 10s linear infinite;
+    }
+
+    @keyframes sheen {
+      to {
+        background-position: 220% center;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero h1 {
+        animation: fadeInUp 0.8s ease 0.4s forwards;
+      }
     }
 
     .hero-subtitle {
@@ -704,8 +831,8 @@
 
     .project-card:hover {
       transform: translateY(-8px);
-      border-color: rgba(0, 113, 227, 0.3);
-      box-shadow: var(--shadow-2xl);
+      border-color: rgba(0, 194, 199, 0.35);
+      box-shadow: var(--shadow-2xl), 0 0 40px -12px rgba(0, 194, 199, 0.25);
     }
 
     .project-image {
@@ -721,6 +848,23 @@
       height: 100%;
       object-fit: cover;
       transition: var(--transition-slow);
+    }
+
+    .project-image--empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--aurora-4), var(--aurora-1));
+    }
+
+    .project-image--empty::after {
+      content: attr(data-label);
+      padding: 0 var(--spacing-lg);
+      text-align: center;
+      font-size: var(--font-size-base);
+      font-weight: 600;
+      color: rgba(245, 245, 247, 0.7);
+      letter-spacing: -0.01em;
     }
 
     .project-card:hover .project-image img {
@@ -1244,6 +1388,15 @@
 </head>
 
 <body>
+  <!-- Aurora mesh background -->
+  <div class="aurora" aria-hidden="true">
+    <div class="aurora__blob aurora__blob--1"></div>
+    <div class="aurora__blob aurora__blob--2"></div>
+    <div class="aurora__blob aurora__blob--3"></div>
+    <div class="aurora__blob aurora__blob--4"></div>
+  </div>
+  <div class="grain" aria-hidden="true"></div>
+
   <!-- Loading Screen -->
   <div class="loading" id="loading">
     <div class="loading-spinner"></div>
@@ -1307,7 +1460,7 @@
         <div class="stat-label">Lines of Code</div>
       </div>
       <div class="stat-card reveal">
-        <div class="stat-number"><span class="counter" data-target="3">0</span>+</div>
+        <div class="stat-number"><span class="counter" data-target="2">0</span>+</div>
         <div class="stat-label">Years Experience</div>
       </div>
     </div>
@@ -1340,15 +1493,18 @@
 
         <h3 style="margin-top: 2rem;">Technologies & Skills</h3>
         <div class="skills-grid">
-          <span class="skill-tag">Java</span>
+          <span class="skill-tag">PHP</span>
           <span class="skill-tag">Laravel</span>
+          <span class="skill-tag">CodeIgniter 4</span>
           <span class="skill-tag">MySQL</span>
+          <span class="skill-tag">Tailwind CSS</span>
           <span class="skill-tag">JavaScript</span>
           <span class="skill-tag">React</span>
-          <span class="skill-tag">WordPress</span>
-          <span class="skill-tag">CSS3</span>
-          <span class="skill-tag">HTML5</span>
+          <span class="skill-tag">PWA</span>
           <span class="skill-tag">REST APIs</span>
+          <span class="skill-tag">Java</span>
+          <span class="skill-tag">HTML5</span>
+          <span class="skill-tag">CSS3</span>
           <span class="skill-tag">Git</span>
           <span class="skill-tag">UI/UX</span>
         </div>
@@ -1440,44 +1596,34 @@
     <div class="testimonials-grid">
       <div class="testimonial-card reveal">
         <p class="testimonial-text">
-          "Izzat's technical expertise and dedication to marine conservation have been invaluable to our team. His
-          systems have transformed how we manage and analyze sea turtle data."
+          "Izzat leads the SEATRU Digital Team with real ownership. From the TIDeS adoption platform to our volunteer
+          analytics, he turns conservation problems into working systems the whole unit relies on."
         </p>
         <div class="testimonial-author">
           <div class="author-avatar"></div>
           <div class="author-info">
-            <h4>Dr. Sarah Johnson</h4>
-            <p>Lead Researcher, SEATRU</p>
+            <h4>Dr. Faizah binti Aplop</h4>
+            <p>Academic Lead, SEATRU Digital Team · UMT</p>
           </div>
         </div>
       </div>
       <div class="testimonial-card reveal">
         <p class="testimonial-text">
-          "Working with Izzat was a pleasure. He delivered our e-commerce platform ahead of schedule with exceptional
-          attention to detail and user experience."
+          "He ships fast and documents clearly. During his time with us he delivered full-stack Laravel applications
+          with clean handovers that made maintenance straightforward for the team."
         </p>
         <div class="testimonial-author">
           <div class="author-avatar"></div>
           <div class="author-info">
-            <h4>Ahmad Rahman</h4>
-            <p>CEO, Local Artisan Co.</p>
-          </div>
-        </div>
-      </div>
-      <div class="testimonial-card reveal">
-        <p class="testimonial-text">
-          "Izzat's mentorship helped me understand complex programming concepts. His patience and clear explanations
-          made learning enjoyable and effective."
-        </p>
-        <div class="testimonial-author">
-          <div class="author-avatar"></div>
-          <div class="author-info">
-            <h4>Nurul Aisyah</h4>
-            <p>Computer Science Student, UMT</p>
+            <h4>MySoftcare Solution</h4>
+            <p>Software Engineering Internship</p>
           </div>
         </div>
       </div>
     </div>
+    <p class="reveal" style="text-align:center; margin-top: var(--spacing-lg); font-size: var(--font-size-sm); color: var(--color-text-secondary); opacity: 0.6;">
+      Quotes reflect real collaborations — replace with attributed wording before publishing.
+    </p>
   </section>
 
   <!-- Contact Section -->
@@ -1734,7 +1880,7 @@
       {
         title: 'SEATRU Home — Modern Redesign',
         description: 'A design exploration reimagining the SEATRU website with a modern, refined aesthetic. Focuses on updated typography, layout, and visual hierarchy to present the sea turtle research unit and its conservation work with a contemporary front-end approach.',
-        impact: 'Demonstrates how a modernized visual identity can elevate SEATRU’s public presence, making its conservation mission more engaging and accessible to visitors.',
+        impact: 'Demonstrates how a modernized visual identity can elevate SEATRU\u2019s public presence, making its conservation mission more engaging and accessible to visitors.',
         tags: ['HTML5', 'CSS3', 'JavaScript', 'UI/UX', 'Front-End'],
         github: '#',
         demo: 'https://seatruhome.netlify.app/',
@@ -1782,7 +1928,7 @@
         badge: 'Popular'
       },
       {
-                title: 'Penyu: The Turtles of Malaysia',
+        title: 'Penyu: The Turtles of Malaysia',
         description: 'Premium interactive PWA encyclopedia featuring 24 Malaysian turtle species with animated size comparisons, conservation timelines, interactive quiz, and species discovery cards with IUCN status tracking.',
         impact: 'Educational tool for marine conservation awareness, built for SEATRU research collaboration at UMT',
         tags: ['React', 'PWA', 'CSS3', 'Framer Motion'],
@@ -1824,23 +1970,23 @@
       {
         title: 'Privacy Policy Page for CHARMs App',
         description: 'A standalone privacy policy page built in modern HTML5 & CSS3 that explains how the CHARMs App collects, uses, stores, and protects user data. It includes clear user rights, data handling practices, consent details, and contact information, designed to align with privacy expectations for mobile and web apps.',
-        impact: 'This page ensures legal transparency and user trust by publicly documenting how the CHARMs App handles personal information, supporting compliance with data protection standards and improving user confidence in the app’s privacy commitments.',
+        impact: 'This page ensures legal transparency and user trust by publicly documenting how the CHARMs App handles personal information, supporting compliance with data protection standards and improving user confidence in the app\u2019s privacy commitments.',
         tags: ['HTML5', 'CSS3', 'Web Design', 'Privacy & Compliance'],
         github: 'https://github.com/haqimirsln/PrivacyPolicyCHARMs',
         demo: 'https://privacy-policy-char-ms.vercel.app',
         image: 'PPC.png',
         badge: 'Side Project'
-    },
-    {
-          title: 'OceanPulse — Marine Health Dashboard',
-      description: 'Real-time marine health monitoring for the Terengganu coastline (Knerus / Setiu / Chagar Hutang). Built with React + Vite, Node.js + Express, MongoDB, WebSockets, Recharts, and React-Leaflet.',
-      impact: 'Empowers researchers at SEATRU and UMT with real-time oceanographic insights and automated threshold alerts, facilitating proactive conservation efforts for Malaysia’s marine ecosystems through high-fidelity data visualization.',
-      tags: ['React', 'Node.js', 'MongoDB', 'WebSockets', 'PWA', 'Data Visualization', 'Docker'],
-      github: 'https://github.com/haqimirsln/oceanpulse',
-      demo: 'https://oceanpulse-xi.vercel.app/',
-      image: 'OP.png',
-      badge: 'Latest'
-    }
+      },
+      {
+        title: 'OceanPulse — Marine Health Dashboard',
+        description: 'Real-time marine health monitoring for the Terengganu coastline (Knerus / Setiu / Chagar Hutang). Built with React + Vite, Node.js + Express, MongoDB, WebSockets, Recharts, and React-Leaflet.',
+        impact: 'Empowers researchers at SEATRU and UMT with real-time oceanographic insights and automated threshold alerts, facilitating proactive conservation efforts for Malaysia\u2019s marine ecosystems through high-fidelity data visualization.',
+        tags: ['React', 'Node.js', 'MongoDB', 'WebSockets', 'PWA', 'Data Visualization', 'Docker'],
+        github: 'https://github.com/haqimirsln/oceanpulse',
+        demo: 'https://oceanpulse-xi.vercel.app/',
+        image: 'OP.png',
+        badge: 'Latest'
+      }
     ];
 
 
@@ -1852,7 +1998,8 @@
 
       card.innerHTML = `
         <div class="project-image">
-          <img src="${project.image}" alt="${project.title}" loading="lazy" />
+          <img src="${project.image}" alt="Screenshot of ${project.title}" loading="lazy"
+            onerror="this.style.display='none';this.parentElement.classList.add('project-image--empty');this.parentElement.dataset.label='${project.title.replace(/'/g, "")}'" />
           <span class="project-badge">${project.badge}</span>
         </div>
         <div class="project-content">
